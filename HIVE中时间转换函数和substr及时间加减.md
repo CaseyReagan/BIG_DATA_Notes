@@ -52,6 +52,36 @@ date_sub    --：日期减天数
 last_day    --：日期的当月的最后一天
 datediff    --：两个日期相差的天数，前-后
 ```
+字段取整函数
+```sql
+round   --： 四舍五入
+ceil    --： 向上取整
+floor   --： 向下取整
+```
+字符串操作函数
+```sql
+upper   --： 转大写
+lower   --： 转小写
+length  --： 长度
+```
 
+### （三）两个最重要时间转换函数
+（一）unix_timestamp函数   
+Unix时间戳，指的是Unix操作系统规定的从1970年1月1日开始所经过的秒数，不考虑润秒。在该系统下，一小时表示为3600秒，一天表示为86400秒，不考虑闰秒。（这样规定的原因是，Unix操作系统是1969年定型设计的。）   
+unix_timestamp函数可以将相应的时间，或者符合格式的string时间形式，转换为Unix时间戳形式。例如，如果参数date满足yyyy-MM-dd HH:mm:ss形式，则可以直接unix_timestamp(string date)得到参数对应的时间戳，或者满足yyyy-MM-dd形式   
+```sql
+select unix_timestamp();  --返回当前时间的Unix时间戳
+
+select unix_timestamp('2018-12-05 01:10:00','yyyy-MM-dd HH:mm:ss');
+--返回该日期的Unix时间戳
+```
+
+（二）from_unixtime函数   
+就是把Unix时间戳转换成时间格式（date格式）   
+```sql
+select from_unixtime(1543943400);
+
+select from_unixtime(1543943400,'yyyy-MM-dd');
+```
 
 
