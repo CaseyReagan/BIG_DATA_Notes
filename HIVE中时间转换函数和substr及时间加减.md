@@ -3,7 +3,7 @@
 ## 总结
 + （1）用unix_timestamp和from_unixtime转换时间。
 + （2）可用substr和concat来截取特殊的时间字符串。
-+ （3）
++ （3）一些其他的日期计算和转换函数和方法。
 
 
 ### （一）经常用到的重要函数：substr、substring、concat
@@ -127,7 +127,46 @@ substr('20170728102031',11,2),':',
 substr('20170728102031',13,2))
 ```
 
+（五）year函数
+year语法: year(string date)
+```sql
+select year('2011-12-08 10:03:01');
+
+--HIVE返回 2011
+```
+其他的month之类的函数同理。
 
 ### （四）其他时间转换、加减技巧
+（一）datediff函数   
+datediff 是两个日期相减的函数，返回两个时间参数的相差天数。语法：DATEDIFF(datetime1, datetime2, datepart)。   
+datetime1，datetime2：datetime 类型，被减数和减数，若输入为 string 类型会隐式转换为 datetime 类型后参与运算，其它类型抛异常。   
+datepart：string 类型常量，修改单位，yyyy、mm、dd、hh、mi、ss 中的一个，指定时间差值的单位，也支持扩展的日期格式，年-“year”，月-“month” 或 “mon”，日-“day”，小时-“hour”。若 datepart 不符合指定的几种 pattern 或者其它类型则会发生异常。   
+返回值：返回时间差值，int 类型。任一输入参数是 NULL，返回 NULL。   
+```sql
+select datediff('2021-10-28', '2021-10-26');
 
+--HIVE返回 2
+```
 
+（二）weekofyear函数   
+weekofyear语法: weekofyear (string date) 返回值: int 说明: 返回日期在本年的周数。   
+```sql
+select weekofyear('2011-12-08 10:03:01');
+
+-- HIVE返回 49
+```
+
+（三）date_add函数和date_sub函数
+一个是给日期加X天，一个是减去X天。   
+date_add(string startdate, int days)，返回值: string   
+```sql
+select date_add('2012-12-08',10)
+
+--HIVE返回值 2012-12-18
+```
+date_sub语法: date_sub (string startdate, int days),返回值: string
+```sql
+select date_sub('2012-12-08',10)
+
+--HIVE返回值 2012-11-28
+```
