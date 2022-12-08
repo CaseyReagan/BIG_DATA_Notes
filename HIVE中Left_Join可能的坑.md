@@ -33,3 +33,4 @@ where  M.tx_dt like '202001%';
 3. 核心：left join时on中条件无过滤记录作用，后做where条件过滤记录。on 优先级高于 where。
 4. 单纯两表join的话，先单表过滤，在join。原因：查询在map端，进行了数据过滤，shuffle阶段数据更少，join在reduce端。
 5. 先两表过滤再join,shuffle阶段数据更多。查询和过滤都在reduce端。
+
