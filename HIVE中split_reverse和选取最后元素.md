@@ -36,16 +36,19 @@ select split('abcdef', 'c')[0];
 ```
 ***
 
+
 ### （三）用Split函数方法取字符串最后一段结果
 ```sql
 --下面这种方法是不行的
 select split('a_b_c_Wave2_d-S3','_')[-1];
+
 
 --可以用下面这种方法
 select split('a_b_c_Wave2_d-S3','_')[size(split('a_b_c_Wave2_d-S3','_'))-1];
 ----结果：d-S3
 ```
 ***
+
 
 ### （四）用Split和reverse函数方法取字符串最后一段结果
 因为reverse是反转整个字符串，所以最后还要反转一次
@@ -54,3 +57,4 @@ select reverse('a_b_c_Wave2_d-S3'); --结果3S-d_2evaW_c_b_a
 select split(reverse('a_b_c_Wave2_d-S3'),'_')[0];--结果3S-d
 select reverse(split(reverse('a_b_c_Wave2_d-S3'),'_')[0]);--结果d-S3
 ```
+***
