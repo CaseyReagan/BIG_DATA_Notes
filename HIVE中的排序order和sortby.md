@@ -82,7 +82,7 @@ set hive.mapred.mode=strict;
 ```
 如果在strict模式下，不加Limit执行order by，会报错“Order by-s without limit”。
 ***
-### （五）sort by和distribute by
+### （五）sort by
 (1)sort by是局部排序。减去了order by最后一个归并排序，只要各个机器节点里的数据有序就行了。Sort by为每个reducer产生一个排序文件。每个Reducer内部进行排序，对全局结果集来说不是排序。我们做sort by的时候可以手动给reducer设置个数。
 ```sql
 hive (default)> set mapreduce.job.reduces=3
@@ -91,9 +91,11 @@ hive (default)> set mapreduce.job.reduces=3
 hive (default)> set mapreduce.job.reduces;
 ```
 默认情况下set mapreduce.job.reduces=-1，见记录"HIVE中set reduces个数.md"   
-(2)distribute by决定了再sort by的时候分成几类，比如n条数据，被分成n/m条数据，那么复杂度就是  (n/m)*(m)*log(m)=nlogm，分的越离散(m越小)，速度越快，因为不需要最后做归并排序(m越小，数据条数就越多，归并排序的时候就越耗时)，关于n条如何被分为m条，需要用distribute by指定字段，比如指定name，这样就可以保证相同name的数据有序了。比如在经分会三中，根据imsi或号码来distribute然后按照时间来sort by。
+### （六） distribute by
+distribute by决定了在sort by的时候分成几类，比如n条数据，被分成n/m条数据，那么复杂度就是  (n/m)*(m)*log(m)=nlogm，分的越离散(m越小)，速度越快，因为不需要最后做归并排序(m越小，数据条数就越多，归并排序的时候就越耗时)，关于n条如何被分为m条，需要用distribute by指定字段，比如指定name，这样就可以保证相同name的数据有序了。比如在经分会三中，根据imsi或号码来distribute然后按照时间来sort by。
 ***
 
 ### （六）HIVE中cluster by
-在《Hadoop权威指南第二版》中这样描述道：如果sort by和distribute by中所用的列相同，可以缩写为cluster by以便同时指定两者所用的列
+在《Hadoop权威指南第二版》中这样描述道：如果sort by和distribute by中所用的列相同，可以缩写为cluster by以便同时指定两者所用的列。    
+cluster by 除了具有 distribute by 的功能外还兼具 sort by 的功能。 所以最终的结果是每个Reduce处理的数据范围不重叠，而且每个Reduce内的数据是排序的，而且可以打到全局有序的结果。  
 ***
