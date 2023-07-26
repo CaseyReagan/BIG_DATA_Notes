@@ -22,6 +22,16 @@ from table;
 
 补充信息，HIVE SQL中的between and 是包头包尾巴的。   
 
+当然也可以不用嵌套，而是分成两部分写，先按case when打上标签，再按标签统计数量。
+```sql
+case when age>=0 and age<=18 then "0_18"
+when age>=19 and age<=24 then "19_24"
+when age>=25 and age<=30 then "25_30"
+when age>=31 and age<=40 then "31_40"
+when age>=41 and age<=60 then "41_60"
+when age>=61 then "0_18" end as fenduan
+```
+
 ### （三）方法二
 这种方法，先将每个text的文本长度除以20，向下取整，再乘以20得到一个分组依据，以这个依据进行group by就可以得到最终结果，在规避循环的情况下，用简单的语句，巧妙的解决了自动分区间统计的问题。
 ```sql
