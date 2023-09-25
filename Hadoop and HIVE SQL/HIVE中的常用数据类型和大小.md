@@ -38,3 +38,27 @@ CHAR	   1-255
 对于CHAR类型来说，它是固定长度的，如果插入的字符串长度不如指定的长度，则会用空格补齐。但是尾部的空格不影响字符串的比较。
    ***
 ### （五）日期类型
+日期类型有两种，日期与时间戳：
+```
+DATE	yyyy-MM-dd	2020-07-04
+TIMESTAMPS	yyyy-MM-dd HH:mm:ss.fffffffff	2020-07-04 12:36:25.111
+```
+1）DATE类型只支持yyyy-MM-dd格式的数据，其余格式都是错误的，会变为NULL
+2）TIMESTAMPS表示UTC时间，格式为yyyy-MM-dd HH:mm:ss.fffffffff，即最多支持纳秒级，如果长度超出，则会变成NULL
+   ***
+### （六）特殊类型、集合类型
+Hive中集合类型主要包含三种：STRUCT、ARRAY、MAP。
+```
+STRUCT
+STRUCT 即结构体，通过相关的不同类型的数据来描述一个数据对象
+STRUCT{first STRING，last STRING}，那么第一个元素可以通过字段名first来引用	
+
+ARRAY
+ARRAY表示一组相同数据类型的集合，下标从零开始，可以用下标访问.
+数组是一组具有相同类型和名称的变量的集合。这些变量称为数组的元素，每个数组元素都有一个编号，编号从零开始。
+
+MAP
+MAP是一组键值对的组合，可以通过KEY访问VALUE
+MAP是一组键-值对元组集合，使用数组表示法（例如[‘key’]）可以访问元素
+```
+
