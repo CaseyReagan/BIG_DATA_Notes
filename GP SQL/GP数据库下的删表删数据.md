@@ -1,5 +1,6 @@
 #  GP数据库下的删表删数据
 本文借鉴：1. https://blog.csdn.net/sosemseo/article/details/109220247
+2. https://blog.csdn.net/sunny05296/article/details/130924877
 
 ### （一）背景
 GP数据库下如何正确的删表删数据，有好几个函数，该选用哪个函数，这值得研究。
@@ -55,3 +56,16 @@ Drop删整个表，删表结构，不可恢复，回收空间。
 
 ***
 ### （六）vacuum()函数
+
+vacuum 是PG数据库垃圾回收，vacuum的主要动作：磁盘清理、更新统计信息、重组数据、解决事务ID回滚问题：   
+1）清除 update、delete 操作后留下的死元组；
+2）跟踪表块中可用空间，更新 free space map；
+3）更新 VM 即 visibility map（可见性映射文件map，vacuum 会根据该文件来选择是否扫描某个 page。select * from pg_visibility('test01');）、index only scan，后续 vacuum 会用到，更新以后，提高后续 vacuum 的效率；
+4）冻结表中的行，防止事务ID回滚；
+5）配合 analyze、定期更新统计信息（pg_stat_all_tables）；   
+vacuum 可以有效解决表膨胀的问题。vacuum有两种：标准vacuum 和 vacuum full：
+1） 标准vacuum:  基本可以 online 操作（DML 运行正常，但不能执行 ALTER TABLE），执行速度快，但能回收的磁盘空间很少。
+2） vacuum full: 能回收更多的磁盘空间，但运行速度要慢很多，它需要对表加独占锁（阻塞一切读写操作），因此不能与该表的其他操作并发进行；此外还需要额外空间存储表副本。
+
+【注意】该动作会消耗系统一定的资源，引起系统的IO上升，对有一定系统瓶颈来说容易造成堵塞，严重会把GP宕掉，造成数据库瞬断。一般不建议vacuum库中全表，通常做法是vaccum指定的表。   
+***
