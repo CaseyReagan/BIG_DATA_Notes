@@ -1,4 +1,4 @@
-# HIVE_STUDY
+# Hadoop_STUDY
 Notes record of Hive and Hadoop and big data database study during work.
 
 + GP SQL folder ： notes about GreepPlum database.
